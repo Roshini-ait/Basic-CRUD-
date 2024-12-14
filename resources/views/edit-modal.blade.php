@@ -2,7 +2,7 @@
     <div class="modal-dialog">
         <form id="editStudentForm" method="POST">
             @csrf
-            @method('PUT') <!-- For update requests -->
+            @method('PUT')
             <div class="modal-content">
                 <div class="modal-header">
                     <h5 class="modal-title" id="editStudentModalLabel">Edit Student</h5>

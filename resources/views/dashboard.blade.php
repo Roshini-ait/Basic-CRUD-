@@ -95,7 +95,7 @@ $(document).ready(function() {
         });
     });
 
-    $('#editStudentForm').on('submit', function(e) {
+    $('#editStudentModal form').on('submit', function(e) {
         e.preventDefault();
 
         const form = $(this);
