@@ -54,7 +54,7 @@ $(document).ready(function() {
             data: data,
             success: function(response) {
                 $('#addStudentModal').modal('hide'); 
-                alert(response.message); 
+                // alert(response.message); 
                 location.reload();
             },
             error: function(xhr, status, error) {
@@ -108,8 +108,8 @@ $(document).ready(function() {
             data: data,
             success: function(response) {
                 $('#editStudentModal').modal('hide'); 
-                alert(response.message); 
-                $('#studentsTable').DataTable().ajax.reload(null, false);
+                // alert(response.message); 
+                // $('#studentsTable').DataTable().ajax.reload(null, false);
             },
             error: function(xhr) {
                 alert('Failed to update student details.');

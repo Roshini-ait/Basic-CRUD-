@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
 
 class StudentController extends Controller
@@ -24,7 +25,7 @@ class StudentController extends Controller
         ]);
 
         Student::create($validated);
-
+        // dd(1);
         return redirect()->back()->with('success', 'Student created successfully.');
     }
 
@@ -36,8 +37,14 @@ class StudentController extends Controller
 
     public function update(Request $request, $id)
     {
+        Log::info('Updating student with ID ' . $id, ['request_data' => $request->all()]);
+        Log::info('Name: ' . $request->input('name'));
+        Log::info('Email: ' . $request->input('email'));
+
         $student = Student::findOrFail($id);
-        $student->update($request->all());
+        $student->update($request->all()); 
+
+        Log::info('Student updated successfully', ['student' => $student]);
 
         return response()->json([
             'message' => 'Student updated successfully.',
