@@ -34,25 +34,14 @@ class StudentController extends Controller
         return response()->json($student);
     }
 
-    public function update(Request $request, Student $student)
+    public function update(Request $request, $id)
     {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => "required|email|unique:students,email,{$student->id}",
-            'phonenumber' => 'required|digits_between:10,15',
-            'address' => 'required|string',
-            // 'city' => 'required|string',
-            // 'state' => 'required|string',
-            // 'country' => 'required|string',
-            'zipcode' => 'required|digits:6',
-            // 'role' => 'required|integer',
-            'gender' => 'required|in:male,female',
-            'dob' => 'required|date',
-        ]);
+        $student = Student::findOrFail($id);
+        $student->update($request->all());
 
-        $student->update($validated);
-
-        return redirect()->back()->with('success', 'Student updated successfully.');
+        return response()->json([
+            'message' => 'Student updated successfully.',
+        ], 200);
     }
 
     public function destroy($id)
