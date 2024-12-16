@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Student;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class StudentController extends Controller
 {
@@ -37,6 +38,9 @@ class StudentController extends Controller
 
     public function update(Request $request, $id)
     {
+        if (!Gate::allows('manage-students')) {
+            abort(403, 'Unauthorized');
+        }
         Log::info('Updating student with ID ' . $id, ['request_data' => $request->all()]);
         Log::info('Name: ' . $request->input('name'));
         Log::info('Email: ' . $request->input('email'));
@@ -53,6 +57,9 @@ class StudentController extends Controller
 
     public function destroy($id)
     {
+        if (!Gate::allows('manage-students')) {
+            abort(403, 'Unauthorized');
+        }
         try {
             $student = Student::findOrFail($id);
 

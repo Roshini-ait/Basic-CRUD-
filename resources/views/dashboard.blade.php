@@ -5,7 +5,9 @@
 @section('content')
 <div class="d-flex justify-content-between mb-3">
     <h3>Students</h3>
+    @can('manage-students') 
     <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addStudentModal">Add Student</button>
+    @endcan
 </div>
 
 <table id="studentsTable" class="table table-bordered">
@@ -16,7 +18,9 @@
             <th>Email</th>
             <th>Phone</th>
             <!-- <th>City</th> -->
-            <th>Actions</th>
+            @can('manage-students')
+                <th>Actions</th>
+            @endcan
         </tr>
     </thead>
     <tbody>
@@ -27,10 +31,12 @@
             <td>{{ $student->email }}</td>
             <td>{{ $student->phonenumber }}</td>
             <!-- <td>{{ $student->city }}</td> -->
+            @can('manage-students') 
             <td>
                 <button class="btn btn-warning btn-sm edit-student" data-id="{{ $student->id }}">Edit</button>
                 <button class="btn btn-danger btn-sm delete-student" data-id="{{ $student->id }}">Delete</button>
             </td>
+            @endcan
         </tr>
         @endforeach
     </tbody>

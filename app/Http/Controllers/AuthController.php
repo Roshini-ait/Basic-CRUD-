@@ -12,6 +12,7 @@ use Session;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
 
 class AuthController extends Controller
 
@@ -59,6 +60,9 @@ class AuthController extends Controller
     public function dashboard()
     {
         if(Auth::check()){
+            if (!Gate::allows('view-students')) {
+                abort(403, 'Unauthorized');
+            }
             $students = Student::paginate(10);
             return view('dashboard', compact('students'));
         }
