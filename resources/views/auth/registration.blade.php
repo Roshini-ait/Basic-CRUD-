@@ -7,6 +7,11 @@
             <div class="col-md-8">
                 <div class="card">
                     <div class="card-header">Register</div>
+                    @if (session('success'))
+                        <div class="alert alert-success" role="alert">
+                            {{ session('success') }}
+                        </div>
+                    @endif
                     <div class="card-body">
                         <form action="{{ route('register.post') }}" method="POST">
                             @csrf
@@ -37,6 +42,15 @@
                                     @endif
                                 </div>
                             </div>
+                            <div class="form-group row mt-3">
+                                <label for="role" class="col-md-4 col-form-label text-md-right">Role</label>
+                                <div class="col-md-6">
+                                    <select name="role" class="form-control col-md-6" required>
+                                        <option value="admin">Admin</option>
+                                        <option value="user">User</option>
+                                    </select>
+                                </div>
+                            </div> 
                             <div class="form-group row mt-3">
                                 <div class="col-md-6 offset-md-4">
                                     <div class="checkbox">

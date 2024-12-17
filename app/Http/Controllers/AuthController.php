@@ -10,6 +10,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Session;
 use App\Models\User;
+use App\Mail\CustomEmail;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Gate;
@@ -49,12 +51,24 @@ class AuthController extends Controller
             'name' => 'required',
             'email' => 'required|email|unique:users',
             'password' => 'required|min:6',
+            'role' => 'required',
         ]);
            
         $data = $request->all();
+        // print_r($request->input('role'));exit;
         $check = $this->create($data);
 
-        return redirect("dashboard")->withSuccess('Great! You have Successfully loggedin');
+        $details = [
+            'name' => $request->input('name'),
+            'message' => $request->input('message'),
+            // 'file_data' => file_get_contents(public_path('files/dynamic-file.pdf')),
+        ];
+
+        Mail::to($request->input('email'))->send(new CustomEmail($details));
+
+        // return response()->json(['message' => 'Email sent successfully!']);
+
+        return redirect("registration")->withSuccess('Great! You have Successfully registered');
     }
 
     public function dashboard()
@@ -75,7 +89,8 @@ class AuthController extends Controller
       return User::create([
         'name' => $data['name'],
         'email' => $data['email'],
-        'password' => Hash::make($data['password'])
+        'password' => Hash::make($data['password']),
+        'role' => $data['role']
       ]);
     }
 

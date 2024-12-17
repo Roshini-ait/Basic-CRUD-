@@ -30,11 +30,11 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         Gate::define('manage-students', function ($user) {
-            return $user->isAdmin(); // Only admins can add/edit/delete
+            return $user->isAdmin(); 
         });
 
         Gate::define('view-students', function ($user) {
-            return $user->isAdmin() || $user->isUser(); // Both roles can view
+            return $user->isAdmin() || $user->isUser();
         });
     }
 
