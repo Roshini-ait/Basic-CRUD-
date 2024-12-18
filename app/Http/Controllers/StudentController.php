@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Student;
+use App\Dto\StudentDto;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Http\Request;
+
 use Illuminate\Support\Facades\Gate;
 
 class StudentController extends Controller
@@ -16,17 +18,19 @@ class StudentController extends Controller
             'email' => 'required|email|unique:students,email',
             'phonenumber' => 'required|digits_between:10,15',
             'address' => 'required|string',
-            // 'city' => 'required|string',
-            // 'state' => 'required|string',
-            // 'country' => 'required|string',
+            'city' => 'required|string',
+            'state' => 'required|string',
+            'country' => 'required|string',
             'zipcode' => 'required|digits:6',
-            // 'role' => 'required|integer',
+            'role' => 'required|integer',
             'gender' => 'required|in:male,female',
             'dob' => 'required|date',
         ]);
 
-        Student::create($validated);
-        // dd(1);
+        // Student::create($validated);
+        $dto = StudentDto::fromRequest($request);
+
+        Student::create((array)$dto);
         return redirect()->back()->with('success', 'Student created successfully.');
     }
 
@@ -36,19 +40,18 @@ class StudentController extends Controller
         return response()->json($student);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Student $student)
     {
         if (!Gate::allows('manage-students')) {
             abort(403, 'Unauthorized');
         }
-        Log::info('Updating student with ID ' . $id, ['request_data' => $request->all()]);
+
         Log::info('Name: ' . $request->input('name'));
         Log::info('Email: ' . $request->input('email'));
 
-        $student = Student::findOrFail($id);
-        $student->update($request->all()); 
+        $dto = StudentDto::fromRequest($request);
 
-        Log::info('Student updated successfully', ['student' => $student]);
+        $student->update((array)$dto);
 
         return response()->json([
             'message' => 'Student updated successfully.',

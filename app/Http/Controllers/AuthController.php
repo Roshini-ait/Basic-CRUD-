@@ -12,6 +12,8 @@ use Session;
 use App\Models\User;
 use App\Mail\CustomEmail;
 use App\Event\UserCreated;
+use App\DTO\UserDto;
+use App\Services\UserService;
 use App\Jobs\SendWelcomeEmailJob;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
@@ -19,8 +21,14 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Gate;
 
 class AuthController extends Controller
-
 {
+    private UserService $userService;
+
+    public function __construct(UserService $userService)
+    {
+        $this->userService = $userService;
+    }
+
     public function index()
     {
         return view('auth.login');
@@ -105,23 +113,16 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6',
-        ]);
+        $userDTO = new UserDTO(
+            $request->input('name'),
+            $request->input('email'),
+            $request->input('password'),
+            $request->input('role')
+        );
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
-        }
+        $user = $this->userService->createUser($userDTO);
 
-        User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
-
-        return response()->json(['message' => 'User successfully registered'], 201);
+        return response()->json($user);
     }
 
     public function login(Request $request)
