@@ -48,12 +48,12 @@ class PostController extends Controller
         $student = $this->model->find($id);
 
         if (!$student) {
-            throw new \Exception("Student not found", 404); // Optional: Handle if not found
+            throw new \Exception("Student not found", 404);
         }
 
-        $student->update($data); // Update the student with new data
+        $student->update($data);
         
-        return $student; // Return the updated student
+        return $student;
     }
 
     public function destroy($id)

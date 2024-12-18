@@ -2,13 +2,19 @@
 namespace App\Http\Controllers;
 
 use App\Models\User;
+use App\Event\UserCreated;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    public function eventtest()
+    {
+        event(new UserCreated('roshiniait@gmail.com'));
+    }
+
     public function index()
     {
-        $users = User::paginate(10); 
+        $users = User::paginate(10);
         return view('dashboard', compact('users'));
     }
 
@@ -34,6 +40,7 @@ class UserController extends Controller
         ]);
 
         $user = User::create($validated);
+        event(new UserCreated('roshiniait@gmail.com'));
 
         return redirect()->route('users.index')->with('success', 'User created successfully');
     }

@@ -17,7 +17,7 @@ class CustomEmail extends Mailable
      * @return void
      */
 
-    public $details; 
+    public $details;
 
     public function __construct($details)
     {
@@ -32,8 +32,9 @@ class CustomEmail extends Mailable
     public function build()
     {
         return $this->subject('Custom Email Subject')
-                    ->view('email.custom-template'); 
-                    // ->attach(public_path('files/example.pdf')); 
+                    ->view('email.custom-template')
+                    ->with('details', $this->details);
+                    // ->attach(public_path('files/example.pdf'));
                     // ->attachData($this->details['file_data'], 'dynamic-file.pdf', [
                     //     'mime' => 'application/pdf',
                     // ]);

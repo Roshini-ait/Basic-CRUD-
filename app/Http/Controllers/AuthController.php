@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Auth;
 use Session;
 use App\Models\User;
 use App\Mail\CustomEmail;
+use App\Event\UserCreated;
+use App\Jobs\SendWelcomeEmailJob;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
@@ -22,7 +24,7 @@ class AuthController extends Controller
     public function index()
     {
         return view('auth.login');
-    }  
+    }
 
     public function registration()
     {
@@ -46,7 +48,7 @@ class AuthController extends Controller
     }
 
     public function postRegistration(Request $request)
-    {  
+    {
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
@@ -55,8 +57,10 @@ class AuthController extends Controller
         ]);
            
         $data = $request->all();
-        // print_r($request->input('role'));exit;
-        $check = $this->create($data);
+        $this->create($data);
+        $user = User::find(1);
+        // event(new UserCreated('roshiniait@gmail.com'));
+        SendWelcomeEmailJob::dispatch($user);
 
         $details = [
             'name' => $request->input('name'),
@@ -65,8 +69,6 @@ class AuthController extends Controller
         ];
 
         Mail::to($request->input('email'))->send(new CustomEmail($details));
-
-        // return response()->json(['message' => 'Email sent successfully!']);
 
         return redirect("registration")->withSuccess('Great! You have Successfully registered');
     }
@@ -113,7 +115,7 @@ class AuthController extends Controller
             return response()->json($validator->errors(), 422);
         }
 
-        $user = User::create([
+        User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
