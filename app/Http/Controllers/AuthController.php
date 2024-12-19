@@ -125,6 +125,22 @@ class AuthController extends Controller
         return response()->json($user);
     }
 
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+
+        $userDTO = new UserDTO(
+            $request->input('name', $user->name),
+            $request->input('email', $user->email),
+            $request->input('password', $user->password),
+            $request->input('role', $user->role)
+        );
+
+        $updatedUser = $this->userService->updateUser($user, $userDTO);
+
+        return response()->json($updatedUser);
+    }
+
     public function login(Request $request)
     {
         $credentials = $request->only(['email', 'password']);

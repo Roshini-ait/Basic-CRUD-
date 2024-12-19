@@ -19,6 +19,7 @@ use App\Http\Controllers\PostController;
 
 Route::get('register', [AuthController::class, 'register']);
 Route::get('login', [AuthController::class, 'login']);
+Route::put('user/{id}', [AuthController::class, 'update']);
 Route::get('items', [ItemController::class, 'index']);
 Route::post('items', [ItemController::class, 'store']);
 Route::get('items/{id}', [ItemController::class, 'show']);
